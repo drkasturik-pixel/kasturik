@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Match Animal To Sound</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200')
+    center/cover no-repeat;
+    min-height:100vh;
+}
+
+#splash{
+    position:fixed;
+    inset:0;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+#splash img{
+    width:300px;
+}
+
+.container{
+    display:none;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#0b5394;
+}
+
+.instructions{
+    background:#fff7cc;
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.game{
+    display:flex;
+    justify-content:space-between;
+    margin-top:30px;
+}
+
+.column{
+    width:45%;
+}
+
+.animal{
+    background:white;
+    margin:10px;
+    padding:15px;
+    border-radius:10px;
+    min-height:50px;
+    font-size:30px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.dropzone{
+    border:3px dashed #888;
+    width:150px;
+    min-height:40px;
+    border-radius:10px;
+}
+
+.card{
+    background:#4CAF50;
+    color:white;
+    padding:12px;
+    margin:12px;
+    border-radius:10px;
+    cursor:grab;
+    text-align:center;
+    font-size:24px;
+}
+
+.feedback{
+    text-align:center;
+    font-size:50px;
+    margin-top:20px;
+}
+
+#message{
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    color:red;
+}
+
+#score{
+    text-align:center;
+    font-size:28px;
+    margin-top:15px;
+}
+
+#finalScreen{
+    display:none;
+    text-align:center;
+    margin-top:100px;
+}
+
+button{
+    padding:15px 30px;
+    font-size:20px;
+    background:#2196f3;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.star{
+    color:gold;
+    font-size:60px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="splash">
+    innovine-logo.png alt="Innovine Logo">
+</div>
+
+<div class="container" id="gameContainer">
+
+<h1>🐾 Match the Animal to its Sound 🐾</h1>
+
+<div class="instructions">
+Drag and drop each sound card to the matching animal.
+</div>
+
+<div id="score">
+Score: <span id="scoreValue">0</span>/8
+</div>
+
+<div class="game">
+
+<div class="column">
+
+<div class="animal">
+🐄
+<div class="dropzone" data-animal="Moo"></div>
+</div>
+
+<div class="animal">
+🐶
+<div class="dropzone" data-animal="Woof"></div>
+</div>
+
+<div class="animal">
+🐱
+<div class="dropzone" data-animal="Meow"></div>
+</div>
+
+<div class="animal">
+🐴
+<div class="dropzone" data-animal="Neigh"></div>
+</div>
+
+<div class="animal">
+🐷
+<div class="dropzone" data-animal="Oink"></div>
+</div>
+
+<div class="animal">
+🦁
+<div class="dropzone" data-animal="Roar"></div>
+</div>
+
+<div class="animal">
+🐍
+<div class="dropzone" data-animal="Hiss"></div>
+</div>
+
+<div class="animal">
+🐯
+<div class="dropzone" data-animal="Growl"></div>
+</div>
+
+</div>
+
+<div class="column">
+
+<div class="card" draggable="true" id="Growl">Growl</div>
+<div class="card" draggable="true" id="Hiss">Hiss</div>
+<div class="card" draggable="true" id="Roar">Roar</div>
+<div class="card" draggable="true" id="Oink">Oink</div>
+<div class="card" draggable="true" id="Neigh">Neigh</div>
+<div class="card" draggable="true" id="Meow">Meow</div>
+<div class="card" draggable="true" id="Woof">Woof</div>
+<div class="card" draggable="true" id="Moo">Moo</div>
+
+</div>
+
+</div>
+
+<div class="feedback" id="feedback"></div>
+<div id="message"></div>
+
+</div>
+
+<div id="finalScreen">
+<h1>🎉 Fantastic Job! 🎉</h1>
+
+<h2>Your Score: <span id="finalScore"></span>/8</h2>
+
+<button onclick="location.reload()">
+🔄 Play Again
+</button>
+</div>
+
+<script>
+
+let score=0;
+
+function speak(text){
+    let speech=new SpeechSynthesisUtterance(text);
+    speech.rate=0.9;
+    speech.pitch=1;
+    speechSynthesis.speak(speech);
+}
+
+setTimeout(()=>{
+    document.getElementById("splash").style.display="none";
+    document.getElementById("gameContainer").style.display="block";
+
+    speak("Welcome! Drag and drop each sound card to the matching animal.");
+},5000);
+
+const cards=document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+    card.addEventListener("dragstart",(e)=>{
+        e.dataTransfer.setData("text",card.id);
+    });
+});
+
+const zones=document.querySelectorAll(".dropzone");
+
+zones.forEach(zone=>{
+
+    zone.addEventListener("dragover",(e)=>{
+        e.preventDefault();
+    });
+
+    zone.addEventListener("drop",(e)=>{
+
+        e.preventDefault();
+
+        let sound=e.dataTransfer.getData("text");
+
+        if(sound===zone.dataset.animal){
+
+            let dragged=document.getElementById(sound);
+
+            zone.appendChild(dragged);
+
+            dragged.draggable=false;
+
+            score++;
+
+            document.getElementById("scoreValue").innerHTML=score;
+
+            document.getElementById("feedback").innerHTML=
+            "⭐⭐⭐ 👍";
+
+            document.getElementById("message").innerHTML=
+            "Excellent!";
+
+            speak("Excellent");
+
+            setTimeout(()=>{
+                document.getElementById("feedback").innerHTML="";
+                document.getElementById("message").innerHTML="";
+            },1500);
+
+            if(score===8){
+
+                setTimeout(()=>{
+
+                    document.getElementById("gameContainer").style.display="none";
+
+                    document.getElementById("finalScreen").style.display="block";
+
+                    document.getElementById("finalScore").innerHTML=score;
+
+                    speak("Congratulations. You matched all animals correctly.");
+
+                },1000);
+
+            }
+
+        }else{
+
+            document.getElementById("feedback").innerHTML="❌";
+
+            document.getElementById("message").innerHTML="Try Again";
+
+            speak("Wrong answer. Try again.");
+
+            let audio=new Audio(
+            "https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
+            audio.play();
+
+            setTimeout(()=>{
+                document.getElementById("feedback").innerHTML="";
+                document.getElementById("message").innerHTML="";
+            },1500);
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>
