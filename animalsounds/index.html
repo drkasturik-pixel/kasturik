@@ -1,380 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Match the Animal to its Sound</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Match the Animal to its Sound</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:linear-gradient(#87CEEB,#BFEFFF,#90EE90);
+
+overflow-x:hidden;
+
+}
+
+.hidden{
+
+display:none;
+
+}
+
+.screen{
+
+width:100%;
+
+min-height:100vh;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+padding:20px;
+
+}
+
+/* ---------- Logo Screen ---------- */
+
+#logoScreen{
+
+background:linear-gradient(#E3F2FD,#BBDEFB);
+
+}
+
+#logo{
+
+width:220px;
+
+margin-bottom:20px;
+
+animation:zoom 2s infinite alternate;
+
+}
+
+@keyframes zoom{
+
+from{
+
+transform:scale(1);
+
+}
+
+to{
+
+transform:scale(1.1);
+
+}
+
+}
+
+#logoScreen h1{
+
+font-size:48px;
+
+color:#1565C0;
+
+}
+
+/* ---------- Instruction Screen ---------- */
+
+#instructionScreen{
+
+background:#FFFDE7;
+
+}
+
+#instructionScreen h1{
+
+font-size:42px;
+
+margin-bottom:20px;
+
+color:#E65100;
+
+}
+
+#instructionScreen p{
+
+font-size:26px;
+
+max-width:900px;
+
+line-height:1.7;
+
+margin-bottom:15px;
+
+}
+
+button{
+
+padding:18px 40px;
+
+font-size:28px;
+
+background:#4CAF50;
+
+color:white;
+
+border:none;
+
+border-radius:40px;
+
+cursor:pointer;
+
+margin-top:30px;
+
+}
+
+button:hover{
+
+background:#2E7D32;
+
+}
+
+/* ---------- Game Screen ---------- */
+
+#gameScreen{
+
+padding:20px;
+
+display:none;
+
+}
+
+header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+background:white;
+
+padding:15px;
+
+border-radius:20px;
+
+margin-bottom:20px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+width:95%;
+
+}
+
+header h1{
+
+color:#E65100;
+
+}
+
+#score{
+
+font-size:30px;
+
+font-weight:bold;
+
+color:#2E7D32;
+
+}
+
+.game{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:30px;
+
+width:95%;
+
+}
+
+.column{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+.card{
+
+background:white;
+
+border-radius:20px;
+
+padding:15px;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:0 5px 10px rgba(0,0,0,.2);
+
+text-align:center;
+
+}
+
+.card:hover{
+
+transform:scale(1.05);
+
+}
+
+.card img{
+
+width:180px;
+
+height:180px;
+
+object-fit:cover;
+
+border-radius:15px;
+
+}
+
+.card h3{
+
+margin-top:10px;
+
+font-size:26px;
+
+}
+
+.soundCard{
+
+background:#FFD54F;
+
+font-size:30px;
+
+padding:40px;
+
+}
+
+.correct{
+
+background:#A5D6A7 !important;
+
+}
+
+.wrong{
+
+background:#EF9A9A !important;
+
+}
+
+#message{
+
+font-size:36px;
+
+font-weight:bold;
+
+margin:20px;
+
+height:50px;
+
+}
+
+#endScreen{
+
+display:none;
+
+}
+
+#endScreen h1{
+
+font-size:55px;
+
+color:#2E7D32;
+
+}
+
+#endScreen h2{
+
+font-size:40px;
+
+margin:20px;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<!-- ======================================================
-BACKGROUND
-======================================================= -->
+<!-- ================= LOGO ================= -->
 
-<div class="background">
+<div id="logoScreen" class="screen">
 
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
+<img src="assets/innovine-logo.png" id="logo">
 
-    <div class="grass"></div>
+<h1>Innovine Learning</h1>
+
+<h2>Animal Sounds Game</h2>
+
+</div> <!-- ================= INSTRUCTIONS ================= -->
+
+<div id="instructionScreen" class="screen hidden">
+
+<h1>🐄 Match the Animal to its Sound 🐯</h1>
+
+<p>
+Click on a Sound Card.
+Listen carefully.
+Then click on the matching animal.
+</p>
+
+<p>
+Match all 8 animals correctly.
+</p>
+
+<button id="startBtn">
+▶ Start Game
+</button>
 
 </div>
 
-<!-- ======================================================
-LOGO SCREEN
-======================================================= -->
+<!-- ================= GAME SCREEN ================= -->
 
-<section id="logoScreen">
+<div id="gameScreen" class="screen">
 
-    <img
-        src="assets/innovine-logo.png"
-        alt="Innovine Logo"
-        id="logo">
+<header>
 
-    <h1>Innovine Learning</h1>
+<h1>🐾 Match the Animal to its Sound</h1>
 
-</section>
+<div>
 
-<!-- ======================================================
-INSTRUCTION SCREEN
-======================================================= -->
-
-<section id="instructionScreen" class="hidden">
-
-    <div class="instructionCard">
-
-        <h1>
-            🐄 Match the Animal to its Sound 🐯
-        </h1>
-
-        <h2>How to Play</h2>
-
-        <ul>
-
-            <li>🔊 Click one Sound Card.</li>
-
-            <li>👂 Listen carefully.</li>
-
-            <li>🐾 Click the matching animal.</li>
-
-            <li>⭐ Correct answer earns a star.</li>
-
-            <li>❌ Wrong answer? Try Again!</li>
-
-            <li>🏆 Match all animals to win.</li>
-
-        </ul>
-
-        <button id="startBtn">
-            ▶ START GAME
-        </button>
-
-    </div>
-
-</section>
-
-<!-- ======================================================
-GAME SCREEN
-======================================================= -->
-
-<section id="gameScreen" class="hidden">
-
-    <!-- Header -->
-
-    <header>
-
-        <h1>
-
-            🦁 Match the Animal to its Sound
-
-        </h1>
-
-        <div id="scoreBoard">
-
-            ⭐ Score :
-            <span id="score">
-                0
-            </span>
-            /
-            8
-
-        </div>
-
-    </header>
-
-    <!-- Feedback -->
-
-    <div id="feedback">
-
-        <div id="message"></div>
-
-    </div>
-
-    <!-- Main Game -->
-
-    <div class="gameContainer">
-
-        <!-- ===========================
-        LEFT COLUMN
-        ============================ -->
-
-        <div class="animalColumn">
-
-            <div
-                class="animalCard"
-                data-animal="cow">
-
-                <img
-                    src="assets/cow.jpg"
-                    alt="Cow">
-
-                <h2>🐄 Cow</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="dog">
-
-                <img
-                    src="assets/dog.jpg"
-                    alt="Dog">
-
-                <h2>🐶 Dog</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="cat">
-
-                <img
-                    src="assets/cat.jpg"
-                    alt="Cat">
-
-                <h2>🐱 Cat</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="horse">
-
-                <img
-                    src="assets/horse.jpg"
-                    alt="Horse">
-
-                <h2>🐴 Horse</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="pig">
-
-                <img
-                    src="assets/pig.jpg"
-                    alt="Pig">
-
-                <h2>🐷 Pig</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="lion">
-
-                <img
-                    src="assets/lion.jpg"
-                    alt="Lion">
-
-                <h2>🦁 Lion</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="snake">
-
-                <img
-                    src="assets/snake.jpg"
-                    alt="Snake">
-
-                <h2>🐍 Snake</h2>
-
-            </div>
-
-            <div
-                class="animalCard"
-                data-animal="tiger">
-
-                <img
-                    src="assets/tiger.jpg"
-                    alt="Tiger">
-
-                <h2>🐯 Tiger</h2>
-
-            </div>
-
-        </div>
-
-        <!-- ===========================
-        RIGHT COLUMN
-        ============================ -->
-
-        <div
-            class="soundColumn"
-            id="soundContainer">
-
-            <!--
-            Sound cards will be created
-            automatically by JavaScript.
-
-            They will be shuffled every game.
-            -->
-
-        </div>
-
-    </div>
-
-    <!-- Floating Stars -->
-
-    <div id="stars"></div>
-
-    <!-- Floating Thumbs -->
-
-    <div id="thumbsUp">
-        👍
-    </div>
-
-    <!-- Try Again -->
-
-    <div id="tryAgain">
-        Try Again!
-    </div>
-
-</section><!-- ======================================================
-CONGRATULATIONS SCREEN
-======================================================= -->
-
-<section id="endScreen" class="hidden">
-
-    <div class="endCard">
-
-        <div class="trophy">
-            🏆
-        </div>
-
-        <h1>
-            Congratulations!
-        </h1>
-
-        <h2>
-            You matched all the animals correctly!
-        </h2>
-
-        <div id="finalScore">
-
-            Final Score
-
-            <br><br>
-
-            <span id="finalMarks">
-                8 / 8
-            </span>
-
-        </div>
-
-        <button id="playAgainBtn">
-
-            🔄 PLAY AGAIN
-
-        </button>
-
-    </div>
-
-</section>
-
-<!-- ======================================================
-CONFETTI
-======================================================= -->
-
-<div id="confettiContainer"></div>
-
-<!-- ======================================================
-HIDDEN AUDIO OBJECT
-(JavaScript loads the required sound file here)
-======================================================= -->
-
-<audio id="audioPlayer"></audio>
-
-<!-- ======================================================
-SUCCESS SOUND
-Generated using Web Audio API in script.js
-======================================================= -->
-
-<audio id="successAudio"></audio>
-
-<!-- ======================================================
-BUZZER SOUND
-Generated using Web Audio API in script.js
-======================================================= -->
-
-<audio id="buzzerAudio"></audio>
-
-<!-- ======================================================
-APPLAUSE
-Generated using Web Audio API
-======================================================= -->
-
-<audio id="applauseAudio"></audio>
-
-<!-- ======================================================
-LOADING MESSAGE
-======================================================= -->
-
-<div id="loadingScreen" class="hidden">
-
-    <div class="loadingBox">
-
-        <div class="loader"></div>
-
-        <h2>
-
-            Loading Game...
-
-        </h2>
-
-    </div>
+⭐ Score :
+<span id="score">0</span>/8
 
 </div>
 
-<!-- ======================================================
-FOOTER
-======================================================= -->
+</header>
 
-<footer>
+<div id="message"></div>
 
-    <p>
+<div class="game">
 
-        © Innovine Learning • Animal Sounds Game
+<!-- ================= ANIMALS ================= -->
 
-    </p>
+<div class="column" id="animals">
 
-</footer>
+<div class="card animal" data-animal="cow">
+<img src="assets/cow.jpg">
+<h3>🐄 Cow</h3>
+</div>
 
-<!-- ======================================================
-JAVASCRIPT
-======================================================= -->
+<div class="card animal" data-animal="dog">
+<img src="assets/dog.jpg">
+<h3>🐶 Dog</h3>
+</div>
 
-<script src="script.js"></script>
+<div class="card animal" data-animal="cat">
+<img src="assets/cat.jpg">
+<h3>🐱 Cat</h3>
+</div>
+
+<div class="card animal" data-animal="horse">
+<img src="assets/horse.jpg">
+<h3>🐴 Horse</h3>
+</div>
+
+<div class="card animal" data-animal="pig">
+<img src="assets/pig.jpg">
+<h3>🐷 Pig</h3>
+</div>
+
+<div class="card animal" data-animal="lion">
+<img src="assets/lion.jpg">
+<h3>🦁 Lion</h3>
+</div>
+
+<div class="card animal" data-animal="snake">
+<img src="assets/snake.jpg">
+<h3>🐍 Snake</h3>
+</div>
+
+<div class="card animal" data-animal="tiger">
+<img src="assets/tiger.jpg">
+<h3>🐯 Tiger</h3>
+</div>
+
+</div>
+
+<!-- ================= SOUND CARDS ================= -->
+
+<div class="column" id="soundContainer">
+
+<!-- JavaScript creates these -->
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= END SCREEN ================= -->
+
+<div id="gameScreen" class="screen hidden">
+
+<h1>🏆 Congratulations!</h1>
+
+<h2>You matched all the animals!</h2>
+
+<h2 id="finalScore"></h2>
+
+<button id="playAgain">
+
+🔄 Play Again
+
+</button>
+
+</div>
+
+<!-- Hidden Audio Player -->
+
+<audio id="player"></audio>
+
+<script>
+
+// ---------------- DATA ----------------
+
+const sounds=[ // ---------------- VARIABLES ----------------
+
+let currentSound = null;
+let score = 0;
+
+const logoScreen = document.getElementById("logoScreen");
+const instructionScreen = document.getElementById("instructionScreen");
+const gameScreen = document.getElementById("gameScreen");
+const endScreen = document.getElementById("endScreen");
+
+const startBtn = document.getElementById("startBtn");
+const playAgain = document.getElementById("playAgain");
+
+const scoreText = document.getElementById("score");
+const finalScore = document.getElementById("finalScore");
+const message = document.getElementById("message");
+
+const soundContainer = document.getElementById("soundContainer");
+const player = document.getElementById("player");
+
+// ---------------- LOGO ----------------
+
+window.onload = function(){
+
+    setTimeout(function(){
+
+        logoScreen.style.display="none";
+
+        instructionScreen.classList.remove("hidden");
+
+    },5000);
+
+};
+
+// ---------------- SHUFFLE ----------------
+
+function shuffle(arr){
+
+    return arr.sort(()=>Math.random()-0.5);
+
+}
+
+// ---------------- CREATE SOUND CARDS ----------------
+
+function createCards(){
+
+    soundContainer.innerHTML="";
+
+    shuffle([...sounds]).forEach(function(item,index){
+
+        let card=document.createElement("div");
+
+        card.className="card soundCard";
+
+        card.innerHTML="🔊 Sound "+(index+1);
+
+        card.onclick=function(){
+
+            currentSound=item;
+
+            player.src=item.file;
+
+            player.play();
+
+            message.innerHTML="Click the matching animal.";
+
+        };
+
+        soundContainer.appendChild(card);
+
+    });
+
+}
+
+// ---------------- START GAME ----------------
+
+startBtn.onclick=function(){
+
+    instructionScreen.classList.add("hidden");
+
+    gameScreen.style.display="flex";
+
+    createCards();
+
+};
+
+// ---------------- MATCH ANIMAL ----------------
+
+document.querySelectorAll(".animal").forEach(function(card){
+
+    card.onclick=function(){
+
+        if(currentSound==null){
+
+            alert("Click a sound first!");
+
+            return;
+
+        }
+
+        if(card.dataset.animal==currentSound.animal){
+
+            card.classList.add("correct");
+
+            card.style.pointerEvents="none";
+
+            score++;
+
+            scoreText.innerHTML=score;
+
+            message.innerHTML="⭐ Correct!";
+
+            currentSound=null;
+
+            if(score==8){
+
+                gameScreen.style.display="none";
+
+                endScreen.style.display="flex";
+
+                finalScore.innerHTML="Score : "+score+"/8";
+
+            }
+
+        }
+
+        else{
+
+            message.innerHTML="❌ Try Again";
+
+            currentSound=null;
+
+        }
+
+    };
+
+});
+
+// ---------------- PLAY AGAIN ----------------
+
+playAgain.onclick=function(){
+
+    location.reload();
+
+};
+
+</script>
 
 </body>
 </html>
+
+{animal:"cow",file:"assets/moo.mp3"},
+
+{animal:"dog",file:"assets/woof.mp3"},
+
+{animal:"cat",file:"assets/meow.mp3"},
+
+{animal:"horse",file:"assets/neigh.mp3"},
+
+{animal:"pig",file:"assets/oink.mp3"},
+
+{animal:"lion",file:"assets/roar.mp3"},
+
+{animal:"snake",file:"assets/hiss.mp3"},
+
+{animal:"tiger",file:"assets/growl.mp3"}
+
+];
+
+// JavaScript continues in Part 3...   
